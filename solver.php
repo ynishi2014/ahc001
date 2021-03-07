@@ -7,12 +7,14 @@ for($i = 0; $i < $N; $i++){
 $score1 = 0; 
 $score2 = 0; 
 $time = microtime(true);
+$count = 0;
 while(true){
     [$result11, $score11] = solve($X,$Y,$R,$I);
     if($score1 < $score11){$score1 = $score11; $result1 = $result11;}
     [$result21, $score21] = solve($Y,$X,$R,$I);
     if($score2 < $score21){$score2 = $score21; $result2 = $result21;}
-    if(microtime(true) - $time > 4.5)break;
+    if(microtime(true) - $time > 4.8)break;
+    $count++;
 }
 $flip = $score1 < $score2;
 if($flip){
@@ -39,9 +41,11 @@ function solve($X,$Y,$R,$I){
         $yt = $Y[$i]; $yb = $Y[$i]+1;
         $xr = $X[$i]; $xl = $X[$i];
         $r = $R[$i];
+        if(count($map[$yt]) == 1)$xr = 10000;
         while(!isset($map[$yt][$xr+1]) && $xr < 10000 && $xr - $X[$i] < $r){ // 右に伸ばす
             $xr++;
         }
+        if(count($map[$yt]) == 1)$xl = 0;
         while(count($map[$yt]) == 1 && !isset($map[$yt][$xl-1]) && $xl > 0 && $xr - $xl < $r){ // 左に伸ばす
             $xl--;
         }
@@ -63,12 +67,13 @@ function solve($X,$Y,$R,$I){
         $result[$I[$i]] = [$xl,$yt,$xr,$yb];
     }
     for($i = 0; $i < $N; $i++){
-        while(($result[$i][3]-$result[$i][1])*($result[$i][2]-$result[$i][0]-0.5) > $origR[$i] && $result[$i][0] < $origX[$i]){
-            $result[$i][0]++; // 左を縮める
-        }
-        while(($result[$i][3]-$result[$i][1])*($result[$i][2]-$result[$i][0]-0.5) > $origR[$i] && $result[$i][2] > $origX[$i]){
-            $result[$i][2]--; // 右を縮める
-        }
+        $max = $origX[$i] - $result[$i][0];
+        $best = floor($result[$i][2] - $result[$i][0] - $origR[$i] / ($result[$i][3]-$result[$i][1]));
+        $result[$i][0] += max(0,min($best, $max));
+        
+        $max = $result[$i][2] - $origX[$i]-1;
+        $best = floor($result[$i][2] - $result[$i][0] - $origR[$i] / ($result[$i][3]-$result[$i][1]));
+        $result[$i][2] -= max(0,min($best, $max));
     }
     $sumP = 0;
     for($i = 0; $i < $N; $i++){
