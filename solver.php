@@ -15,16 +15,14 @@ for($i = 0; $i < $N; $i++){
   while(count($map[$yt]) == 1 && !isset($map[$yt][$xl-1]) && $xl > 0 && $xr - $xl < $r){
     $xl--;
   }
-  /*
   while(!isset($map[$yt-1]) && $yt > 0 && ($yb-$yt)*($xr-$xl) < $r){
     $yt--;
     $map[$yt] = true;
   }
-  while(!isset($map[$yt+1]) && $yt > 0 && ($yb-$yt)*($xr-$xl) < $r){
+  while(!isset($map[$yb+1]) && !isset($map[$yb]) && $yb < 10000 && ($yb-$yt)*($xr-$xl) < $r){
     $yb++;
-    $map[$yt] = true;
+    $map[$yb] = true;
   }
-  */
   echo implode(" ", [$xl,$yt,$xr,$yb]),"\n";
 }
 
