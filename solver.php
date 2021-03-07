@@ -2,7 +2,30 @@
 [$N] = ints();
 for($i = 0; $i < $N; $i++){
     [$x,$y,$r] = ints();
-    echo implode(" ", [$x, $y, $x+1, $y+1]),"\n";
+    $map[$y][$x] = $r;
+    $X[] = $x; $Y[] = $y; $R[] = $r;
+}
+for($i = 0; $i < $N; $i++){
+  $yt = $Y[$i]; $yb = $Y[$i]+1;
+  $xr = $X[$i]; $xl = $X[$i];
+  $r = $R[$i];
+  while(!isset($map[$yt][$xr+1]) && $xr < 10000 && $xr - $X[$i] < $r){
+    $xr++;
+  }
+  while(count($map[$yt]) == 1 && !isset($map[$yt][$xl-1]) && $xl > 0 && $xr - $xl < $r){
+    $xl--;
+  }
+  /*
+  while(!isset($map[$yt-1]) && $yt > 0 && ($yb-$yt)*($xr-$xl) < $r){
+    $yt--;
+    $map[$yt] = true;
+  }
+  while(!isset($map[$yt+1]) && $yt > 0 && ($yb-$yt)*($xr-$xl) < $r){
+    $yb++;
+    $map[$yt] = true;
+  }
+  */
+  echo implode(" ", [$xl,$yt,$xr,$yb]),"\n";
 }
 
 
