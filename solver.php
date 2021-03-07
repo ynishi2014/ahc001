@@ -4,12 +4,16 @@ for($i = 0; $i < $N; $i++){
     [$x,$y,$r] = ints();
     $X[] = $x; $Y[] = $y; $R[] = $r; $I[] = $i;
 }
-[$result10, $score10] = solve($X,$Y,$R,$I,0);
-[$result11, $score11] = solve($X,$Y,$R,$I,1);
-if($score10>$score11){$score1 = $score10; $result1 = $result10;}else{$score1 = $score11; $result1 = $result11;}
-[$result20, $score20] = solve($Y,$X,$R,$I,0);
-[$result21, $score21] = solve($Y,$X,$R,$I,1);
-if($score20>$score21){$score2 = $score20; $result2 = $result20;}else{$score2 = $score21; $result2 = $result21;}
+$score1 = 0; 
+$score2 = 0; 
+$time = microtime(true);
+while(true){
+    [$result11, $score11] = solve($X,$Y,$R,$I);
+    if($score1 < $score11){$score1 = $score11; $result1 = $result11;}
+    [$result21, $score21] = solve($Y,$X,$R,$I);
+    if($score2 < $score21){$score2 = $score21; $result2 = $result21;}
+    if(microtime(true) - $time > 4.5)break;
+}
 $flip = $score1 < $score2;
 if($flip){
     $result = $result2;
@@ -22,7 +26,7 @@ if($flip){
 for($i = 0; $i < $N; $i++){
     echo implode(" ", $result[$i]),"\n";
 }
-function solve($X,$Y,$R,$I,$M){
+function solve($X,$Y,$R,$I){
     $N = count($X);
     for($i = 0; $i < $N; $i++){
         $map[$Y[$i]][$X[$i]] = 1;
@@ -41,6 +45,7 @@ function solve($X,$Y,$R,$I,$M){
         while(count($map[$yt]) == 1 && !isset($map[$yt][$xl-1]) && $xl > 0 && $xr - $xl < $r){ // 左に伸ばす
             $xl--;
         }
+        $M = rand()%2;
         for($j = 0; $j < 2; $j++){
             if(($j+$M) % 2 == 0){
                 while(!isset($map[$yt-1]) && $yt > 0 && ($yb-$yt)*($xr-$xl) < $r){ // 上に伸ばす
