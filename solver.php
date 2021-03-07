@@ -28,30 +28,30 @@ function solve($X,$Y,$R,$I){
     array_multisort($R, $X, $Y, $I);
 
     for($i = 0; $i < $N; $i++){
-    $yt = $Y[$i]; $yb = $Y[$i]+1;
-    $xr = $X[$i]; $xl = $X[$i];
-    $r = $R[$i];
-    while(!isset($map[$yt][$xr+1]) && $xr < 10000 && $xr - $X[$i] < $r){ // 右に伸ばす
-        $xr++;
-    }
-    while(count($map[$yt]) == 1 && !isset($map[$yt][$xl-1]) && $xl > 0 && $xr - $xl < $r){ // 左に伸ばす
-        $xl--;
-    }
-    while(!isset($map[$yt-1]) && $yt > 0 && ($yb-$yt)*($xr-$xl) < $r){ // 上に伸ばす
-        $yt--;
-        $map[$yt] = true;
-    }
-    while(!isset($map[$yb+1]) && !isset($map[$yb]) && $yb < 10000 && ($yb-$yt)*($xr-$xl) < $r){ // 下に伸ばす
-        $yb++;
-        $map[$yb] = true;
-    }
-    $result[$I[$i]] = [$xl,$yt,$xr,$yb];
+        $yt = $Y[$i]; $yb = $Y[$i]+1;
+        $xr = $X[$i]; $xl = $X[$i];
+        $r = $R[$i];
+        while(!isset($map[$yt][$xr+1]) && $xr < 10000 && $xr - $X[$i] < $r){ // 右に伸ばす
+            $xr++;
+        }
+        while(count($map[$yt]) == 1 && !isset($map[$yt][$xl-1]) && $xl > 0 && $xr - $xl < $r){ // 左に伸ばす
+            $xl--;
+        }
+        while(!isset($map[$yt-1]) && $yt > 0 && ($yb-$yt)*($xr-$xl) < $r){ // 上に伸ばす
+            $yt--;
+            $map[$yt] = true;
+        }
+        while(!isset($map[$yb+1]) && !isset($map[$yb]) && $yb < 10000 && ($yb-$yt)*($xr-$xl) < $r){ // 下に伸ばす
+            $yb++;
+            $map[$yb] = true;
+        }
+        $result[$I[$i]] = [$xl,$yt,$xr,$yb];
     }
     for($i = 0; $i < $N; $i++){
-        while(($result[$i][3]-$result[$i][1])*($result[$i][2]-$result[$i][0]) > $origR[$i] && $result[$i][0] < $origX[$i]){
+        while(($result[$i][3]-$result[$i][1])*($result[$i][2]-$result[$i][0]-0.5) > $origR[$i] && $result[$i][0] < $origX[$i]){
             $result[$i][0]++; // 左を縮める
         }
-        while(($result[$i][3]-$result[$i][1])*($result[$i][2]-$result[$i][0]) > $origR[$i] && $result[$i][2] > $origX[$i]){
+        while(($result[$i][3]-$result[$i][1])*($result[$i][2]-$result[$i][0]-0.5) > $origR[$i] && $result[$i][2] > $origX[$i]){
             $result[$i][2]--; // 右を縮める
         }
     }
