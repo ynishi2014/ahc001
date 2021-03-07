@@ -4,8 +4,12 @@ for($i = 0; $i < $N; $i++){
     [$x,$y,$r] = ints();
     $X[] = $x; $Y[] = $y; $R[] = $r; $I[] = $i;
 }
-[$result1, $score1] = solve($X,$Y,$R,$I);
-[$result2, $score2] = solve($Y,$X,$R,$I);
+[$result10, $score10] = solve($X,$Y,$R,$I,0);
+[$result11, $score11] = solve($X,$Y,$R,$I,1);
+if($score10>$score11){$score1 = $score10; $result1 = $result10;}else{$score1 = $score11; $result1 = $result11;}
+[$result20, $score20] = solve($Y,$X,$R,$I,0);
+[$result21, $score21] = solve($Y,$X,$R,$I,1);
+if($score20>$score21){$score2 = $score20; $result2 = $result20;}else{$score2 = $score21; $result2 = $result21;}
 $flip = $score1 < $score2;
 if($flip){
     $result = $result2;
@@ -18,7 +22,7 @@ if($flip){
 for($i = 0; $i < $N; $i++){
     echo implode(" ", $result[$i]),"\n";
 }
-function solve($X,$Y,$R,$I){
+function solve($X,$Y,$R,$I,$M){
     $N = count($X);
     for($i = 0; $i < $N; $i++){
         $map[$Y[$i]][$X[$i]] = 1;
@@ -37,13 +41,19 @@ function solve($X,$Y,$R,$I){
         while(count($map[$yt]) == 1 && !isset($map[$yt][$xl-1]) && $xl > 0 && $xr - $xl < $r){ // 左に伸ばす
             $xl--;
         }
-        while(!isset($map[$yt-1]) && $yt > 0 && ($yb-$yt)*($xr-$xl) < $r){ // 上に伸ばす
-            $yt--;
-            $map[$yt] = true;
-        }
-        while(!isset($map[$yb+1]) && !isset($map[$yb]) && $yb < 10000 && ($yb-$yt)*($xr-$xl) < $r){ // 下に伸ばす
-            $yb++;
-            $map[$yb] = true;
+        for($j = 0; $j < 2; $j++){
+            if(($j+$M) % 2 == 0){
+                while(!isset($map[$yt-1]) && $yt > 0 && ($yb-$yt)*($xr-$xl) < $r){ // 上に伸ばす
+                    $yt--;
+                    $map[$yt] = true;
+                }
+            }
+            if(($j+$M) % 2 == 1){
+                while(!isset($map[$yb+1]) && !isset($map[$yb]) && $yb < 10000 && ($yb-$yt)*($xr-$xl) < $r){ // 下に伸ばす
+                    $map[$yb] = true;
+                    $yb++;
+                }
+            }
         }
         $result[$I[$i]] = [$xl,$yt,$xr,$yb];
     }
