@@ -3,8 +3,10 @@
 for($i = 0; $i < $N; $i++){
     [$x,$y,$r] = ints();
     $map[$y][$x] = $r;
-    $X[] = $x; $Y[] = $y; $R[] = $r;
+    $X[] = $x; $Y[] = $y; $R[] = $r; $I[] = $i;
 }
+array_multisort($R, $X, $Y, $I);
+
 for($i = 0; $i < $N; $i++){
   $yt = $Y[$i]; $yb = $Y[$i]+1;
   $xr = $X[$i]; $xl = $X[$i];
@@ -23,7 +25,10 @@ for($i = 0; $i < $N; $i++){
     $yb++;
     $map[$yb] = true;
   }
-  echo implode(" ", [$xl,$yt,$xr,$yb]),"\n";
+  $result[$I[$i]] = [$xl,$yt,$xr,$yb];
+}
+for($i = 0; $i < $N; $i++){
+    echo implode(" ", $result[$i]),"\n";
 }
 
 function ints($n = false){
